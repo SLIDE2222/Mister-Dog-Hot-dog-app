@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="Mister Dog mascot">
+        <div class="brand-text">
+          <p class="badge">FAN-MADE • PROFILE</p>
+          <h1>YOUR PROFILE 👤</h1>
+          <p class="sub" id="profileSub">Loading user…</p>
+
+          <div class="hero-actions">
+            <a class="btn ghost" href="./index.html">← Back to Menu</a>
+            <button class="btn" id="logoutBtn" type="button">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout" style="grid-template-columns:1fr;">
+
+    <!-- ORDERS -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Orders</h2>
+        <p>Your future masterpiece of food history.</p>
+      </div>
+
+      <div id="ordersBox" class="cart-items">
+        <p class="muted">No orders yet. Go buy imaginary hot dogs first 🌭</p>
+      </div>
+    </section>
+
+    <!-- ADDRESSES -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Addresses</h2>
+        <p>Where the (demo) delivery would go.</p>
+      </div>
+
+      <div id="addressesBox" class="cart-items"></div>
+
+      <button class="btn full" id="addressBtn" type="button">Add Address</button>
+
+      <!-- Form appears BELOW the button -->
+      <div class="builder" id="addressFormWrap" style="display:none;">
+        <div class="panel-head" style="margin-bottom:10px;">
+          <h2 style="font-size:16px;">Address</h2>
+          <p>Save where you want delivery.</p>
+        </div>
+
+        <form id="addressForm" class="form">
+          <label class="field">
+            <span>Street</span>
+            <input id="addrStreet" type="text" placeholder="Rua Exemplo, 123" required />
+          </label>
+
+          <label class="field">
+            <span>City</span>
+            <input id="addrCity" type="text" placeholder="Sorocaba" required />
+          </label>
+
+          <label class="field">
+            <span>ZIP</span>
+            <input id="addrZip" type="text" placeholder="18000-000" required />
+          </label>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" type="submit">Save Address</button>
+            <button class="btn ghost" id="cancelAddress" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Fan-made demo • No payments • No affiliation</p>
+  </footer>
+
+  <script>
+    // ----- AUTH GUARD -----
+    const userRaw = localStorage.getItem("user");
+    if (!userRaw) window.location.assign("./index.html");
+    const user = JSON.parse(userRaw);
+
+    // Show user
+    document.getElementById("profileSub").textContent =
+      `Logged in as ${user.name} (${user.email}) • Provider: ${user.provider}`;
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("user");
+      window.location.assign("./index.html");
+    });
+
+    // ===== ADDRESS SYSTEM (LIST) =====
+    const addressBtn = document.getElementById("addressBtn");
+    const addressesBox = document.getElementById("addressesBox");
+
+    const addressFormWrap = document.getElementById("addressFormWrap");
+    const addressForm = document.getElementById("addressForm");
+    const cancelAddress = document.getElementById("cancelAddress");
+
+    const addrStreet = document.getElementById("addrStreet");
+    const addrCity = document.getElementById("addrCity");
+    const addrZip = document.getElementById("addrZip");
+
+    const addressKey = `addresses_${user.email}`;
+    let addresses = JSON.parse(localStorage.getItem(addressKey) || "[]");
+
+    function renderAddresses() {
+      if (addresses.length === 0) {
+        addressesBox.innerHTML = `<p class="muted">No addresses yet. Add one below 👇</p>`;
+        addressBtn.textContent = "Add Address";
+        return;
+      }
+
+      addressBtn.textContent = "Change Addresses";
+
+      addressesBox.innerHTML = addresses.map((a, idx) => `
+        <div class="card">
+          <div class="card-top">
+            <h3>${escapeHtml(a.street)}</h3>
+            <span class="tag">#${idx + 1}</span>
+          </div>
+          <p>${escapeHtml(a.city)} • ${escapeHtml(a.zip)}</p>
+          <div class="price">
+            <span class="muted">Saved</span>
+            <button class="pill" type="button" data-remove-address="${idx}">Remove</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openAddressForm() {
+      addressFormWrap.style.display = "block";
+      addrStreet.focus();
+    }
+
+    function closeAddressForm() {
+      addressFormWrap.style.display = "none";
+      addressForm.reset();
+    }
+
+    // Toggle form
+    addressBtn.addEventListener("click", () => {
+      const isHidden = addressFormWrap.style.display === "none";
+      if (isHidden) openAddressForm();
+      else closeAddressForm();
+    });
+
+    cancelAddress.addEventListener("click", closeAddressForm);
+
+    // Save address
+    addressForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      addresses.push({
+        street: addrStreet.value.trim(),
+        city: addrCity.value.trim(),
+        zip: addrZip.value.trim()
+      });
+
+      localStorage.setItem(addressKey, JSON.stringify(addresses));
+      renderAddresses();
+      closeAddressForm();
+    });
+
+    // Remove address (delegation)
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-remove-address]");
+      if (!btn) return;
+
+      const idx = Number(btn.dataset.removeAddress);
+      if (Number.isNaN(idx)) return;
+
+      addresses.splice(idx, 1);
+      localStorage.setItem(addressKey, JSON.stringify(addresses));
+      renderAddresses();
+    });
+
+    // Tiny safety: avoid injecting raw HTML from inputs
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    renderAddresses();
+  </script>
+
+</body>
+</html>

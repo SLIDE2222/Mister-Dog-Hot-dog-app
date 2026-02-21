@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mister Dog (fan-made)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+  <div class="hero-inner">
+
+    <!-- TOP NAV -->
+    <div class="top-nav">
+      <div class="nav-spacer"></div>
+
+      <!-- AUTH (top-right) -->
+<div class="auth-buttons">
+  <button class="auth-btn login" id="loginBtn" type="button">Login</button>
+
+  <a class="auth-btn signup" href="signup.html">Sign Up</a>
+</div>
+
+    </div>
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="Mister Dog mascot">
+        <div class="brand-text">
+          <p class="badge">FAN-MADE • MENU + CART</p>
+          <h1>MISTER DOG 🌭</h1>
+          <p class="sub">Escolha seu hot dog e finalize o pedido (demo).</p>
+
+          <div class="hero-actions">
+            <a class="btn" href="#menu">Compre agora!</a>
+            <button class="btn ghost" id="dealBtn" type="button">Random deal 🎲</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="layout">
+
+    <!-- MENU -->
+    <section id="menu" class="panel">
+      <div class="panel-head">
+        <h2>Menu</h2>
+        <p>Clique Add → vai para o carrinho.</p>
+      </div>
+
+      <div class="grid" id="menuGrid">
+
+       <article class="card">
+  <div class="card-top">
+    <h3>Misterdog Completo</h3>
+    <span class="tag">TRADICIONAL</span>
+  </div>
+  <p>Pão, salsicha, maionese especial, tomate com milho, tomate com cebola, batata palha, ketchup e mostarda.</p>
+  <div class="price">
+    <strong class="money">R$ 15,00</strong>
+    <button class="pill" type="button" data-id="1">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Misterdog Vegetariano</h3>
+    <span class="tag">VEGGIE</span>
+  </div>
+  <p>Pão, salsicha de soja, maionese especial, tomate com milho, tomate com cebola, batata palha, ketchup e mostarda.</p>
+  <div class="price">
+    <strong class="money">R$ 19,00</strong>
+    <button class="pill" type="button" data-id="2">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Mister Cala-Bacon</h3>
+    <span class="tag">ESPECIAL</span>
+  </div>
+  <p>Pão, salsicha, tomate com milho, tomate com cebola, batata palha, ketchup, mostarda, bacon e calabresa.</p>
+  <div class="price">
+    <strong class="money">R$ 22,00</strong>
+    <button class="pill" type="button" data-id="3">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Misterdog Calabresa</h3>
+    <span class="tag">CALABRESA</span>
+  </div>
+  <p>Pão, salsicha, maionese especial, tomate com cebola, batata palha, ketchup, mostarda e calabresa em fatias.</p>
+  <div class="price">
+    <strong class="money">R$ 19,00</strong>
+    <button class="pill" type="button" data-id="4">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Misterdog Bacon</h3>
+    <span class="tag">BACON</span>
+  </div>
+  <p>Pão, salsicha, maionese especial, tomate com cebola, batata palha, ketchup, mostarda e bacon em cubos.</p>
+  <div class="price">
+    <strong class="money">R$ 19,00</strong>
+    <button class="pill" type="button" data-id="5">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Maionese Especial do Mister</h3>
+    <span class="tag">EXTRA</span>
+  </div>
+  <p>Maionese caseira, de qualidade e sabor irresistível.</p>
+  <div class="price">
+    <strong class="money">R$ 3,00</strong>
+    <button class="pill" type="button" data-id="6">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Água Mineral 510ml</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Unidade 510ml.</p>
+  <div class="price">
+    <strong class="money">R$ 3,00</strong>
+    <button class="pill" type="button" data-id="7">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Suco de Laranja 500ml</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Garrafa 500ml.</p>
+  <div class="price">
+    <strong class="money">R$ 10,00</strong>
+    <button class="pill" type="button" data-id="8">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Coca-Cola 350ml</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Lata 350ml.</p>
+  <div class="price">
+    <strong class="money">R$ 7,00</strong>
+    <button class="pill" type="button" data-id="9">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Coca-Cola 1,5L</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Garrafa 1,5L.</p>
+  <div class="price">
+    <strong class="money">R$ 12,00</strong>
+    <button class="pill" type="button" data-id="10">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Tubaína 350ml</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Garrafa 350ml.</p>
+  <div class="price">
+    <strong class="money">R$ 4,00</strong>
+    <button class="pill" type="button" data-id="11">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Tubaína 2L</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Garrafa 2L.</p>
+  <div class="price">
+    <strong class="money">R$ 10,00</strong>
+    <button class="pill" type="button" data-id="12">Adicionar</button>
+  </div>
+</article>
+
+<article class="card">
+  <div class="card-top">
+    <h3>Guaraná Tubaína Zero 2L</h3>
+    <span class="tag">BEBIDA</span>
+  </div>
+  <p>Embalagem 2L.</p>
+  <div class="price">
+    <strong class="money">R$ 10,00</strong>
+    <button class="pill" type="button" data-id="13">Adicionar</button>
+  </div>
+</article>
+</div>
+</section>
+
+    <!-- CART -->
+    <aside class="cart panel">
+      <div class="panel-head">
+        <h6>Cart</h6>
+        <p id="cartHint">Empty… fix that 🌭</p>
+      </div>
+
+      <div id="cartItems" class="cart-items"></div>
+
+      <div class="cart-footer">
+        <div class="row">
+          <span>Subtotal</span>
+          <strong id="subtotal">R$ 0,00</strong>
+        </div>
+
+        <div class="row small">
+          <span>Service fee</span>
+         <span id="fee">R$ 0,00</span>
+        </div>
+
+        <div class="row total">
+          <span>Total</span>
+         <strong id="total">R$ 0,00</strong>
+        </div>
+
+        <button class="btn full" id="checkoutBtn" type="button" disabled>Checkout</button>
+        <button class="btn ghost full" id="clearBtn" type="button" disabled>Clear</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Fan-made demo • HTML/CSS only • No payments • No affiliation</p>
+  </footer>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal" id="checkoutModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="modal-head">
+        <h2 id="checkoutTitle">Checkout</h2>
+        <button class="pill" id="closeCheckout" type="button">Close</button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="summary-box">
+          <div class="row">
+            <span>Subtotal</span>
+            <strong id="coSubtotal">$0.00</strong>
+          </div>
+
+          <div class="row small">
+            <span>Service fee</span>
+            <span id="coFee">$0.00</span>
+          </div>
+
+          <div class="row total">
+            <span>Total</span>
+            <strong id="coTotal">$0.00</strong>
+          </div>
+        </div>
+
+        <form id="checkoutForm" class="form">
+          <label class="field">
+            <span>Name</span>
+            <input id="coName" type="text" placeholder="Jeff" required />
+          </label>
+
+          <label class="field">
+            <span>Phone</span>
+            <input id="coPhone" type="tel" placeholder="(15) 99999-9999" required />
+          </label>
+
+          <label class="field">
+            <span>Delivery notes (optional)</span>
+            <input id="coNotes" type="text" placeholder="No onions, call when outside…" />
+          </label>
+
+          <button class="btn full" type="submit">Place order (demo)</button>
+        </form>
+
+        <p class="muted disclaimer">
+  Demo only. No payments. No affiliation.
+</p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="loginModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-login="true"></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <div class="modal-head">
+        <h2 id="loginTitle">Login</h2>
+        <button class="pill" id="closeLogin" type="button">Close</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="loginForm" class="form">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" id="loginEmail" placeholder="jeff@email.com" required />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input type="password" id="loginPassword" placeholder="••••••••" required />
+          </label>
+
+          <button type="button" class="google-btn" id="googleLogin">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+  Continue with Google
+</button>
+
+<div class="divider">or</div>
+
+<button class="btn full" type="submit">Log In</button>
+        </form>
+
+        <p class="muted disclaimer">Demo only. No real authentication.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT MUST BE LAST INSIDE BODY -->
+  <script src="script.js"></script>
+</body>
+</html>

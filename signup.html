@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="Mister Dog mascot">
+        <div class="brand-text">
+          <p class="badge">FAN-MADE • DEMO</p>
+          <h1>SIGN UP 🧾</h1>
+          <p class="sub">Demo only. No real accounts. Your secrets are safe.</p>
+
+          <div class="hero-actions">
+            <a class="btn ghost" href="index.html">← Back to Menu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout" style="grid-template-columns:1fr;">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Create Account</h2>
+        <p>Just UI for now.</p>
+      </div>
+
+      <form id="signupForm" class="form">
+        <label class="field">
+          <span>Name</span>
+          <input type="text" id="suName" placeholder="Jeff" required />
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="suEmail" placeholder="jeff@email.com" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="suPassword" placeholder="••••••••" required />
+        </label>
+
+        <label class="field">
+          <span>Confirm Password</span>
+          <input type="password" id="suPassword2" placeholder="••••••••" required />
+        </label>
+
+        <button type="button" class="google-btn" id="googleSignup">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+  Sign up with Google
+</button>
+
+<div class="divider">or</div>
+
+<button class="btn full" type="submit">Create account (demo)</button>
+      </form>
+
+      <p class="muted disclaimer">Demo only. No real authentication.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Fan-made demo • No payments • No affiliation</p>
+  </footer>
+
+  <script>
+    // demo submit: prevent reload + show message
+    document.getElementById("signupForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const p1 = document.getElementById("suPassword").value;
+      const p2 = document.getElementById("suPassword2").value;
+
+      if (p1 !== p2) {
+        alert("Passwords do not match 😐");
+        return;
+      }
+
+      alert("Account created (not really) ✅");
+      window.location.href = "index.html";
+    });
+  
+
+  // ===== GOOGLE SIGN UP (DEMO) =====
+  const googleSignup = document.getElementById("googleSignup");
+
+  if (googleSignup) {
+    googleSignup.addEventListener("click", () => {
+      const fakeUser = {
+        name: "Google User",
+        email: "user@gmail.com",
+        provider: "google"
+      };
+
+      // Save fake session
+      localStorage.setItem("user", JSON.stringify(fakeUser));
+
+      alert("Signed up with Google (demo) 🚀");
+
+      // Redirect to main page after signup
+      window.location.href = "index.html";
+    });
+  }
+
+  // Normal signup form (demo)
+  const signupForm = document.getElementById("signupForm");
+
+  if (signupForm) {
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("suName").value;
+      const email = document.getElementById("suEmail").value;
+      const pass1 = document.getElementById("suPassword").value;
+      const pass2 = document.getElementById("suPassword2").value;
+
+      if (pass1 !== pass2) {
+        alert("Passwords do not match 😐");
+        return;
+      }
+
+      const fakeUser = {
+        name,
+        email,
+        provider: "email"
+      };
+
+      localStorage.setItem("user", JSON.stringify(fakeUser));
+
+      alert("Account created successfully (demo) 🎉");
+
+      // Redirect back to main site
+      window.location.href = "index.html";
+    });
+  }
+</script>
+</body>
+</html>
