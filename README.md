@@ -1,0 +1,142 @@
+# Mister Dog Project — Development Log
+
+## Date
+
+Today
+
+## Project
+
+Mister Dog (Fan-made Menu + Cart Website)
+
+---
+
+## 1. UI Improvements
+
+* Added Login and Sign Up buttons to the top-right of the hero section
+* Styled authentication buttons to match existing design system:
+
+  * Same color palette (red, blue, yellow theme)
+  * Rounded pill style
+  * Consistent shadows and hover effects
+* Fixed incorrect alignment (moved from left/ugly default layout to proper top-right positioning)
+
+---
+
+## 2. Modal System Expansion
+
+* Implemented a new Login Modal
+* Reused existing modal architecture (same structure as Checkout modal)
+* Ensured visual consistency across modals (card, backdrop, spacing, typography)
+
+Features added:
+
+* Email input
+* Password input
+* Close button
+* Backdrop click to close
+* Demo submit behavior
+
+---
+
+## 3. JavaScript Functionality
+
+### Login System (Frontend Demo)
+
+* Connected Login button (`#loginBtn`) to modal logic
+* Implemented:
+
+  * Open modal on click
+  * Close modal via button
+  * Close modal via backdrop click
+  * Form submit handler with demo alert
+* Added defensive guards to prevent crashes if DOM elements are missing
+
+---
+
+## 4. Debugging & Bug Fixes
+
+### Critical HTML Fix
+
+* Moved Login Modal inside `<body>` (previously placed after `</body>`, breaking DOM behavior)
+
+### Script Stability Fix
+
+* Fixed `openCheckout()` error:
+
+  * Previously used undefined variables (`subtotal`, `fee`, `total`)
+  * Replaced with proper `calcTotals()` destructuring
+* Prevented runtime errors that were stopping other features (like login) from working
+
+---
+
+## 5. Code Architecture Improvements
+
+* Maintained single event delegation system for clicks
+* Preserved modular structure:
+
+  * Menu logic
+  * Cart logic
+  * Checkout modal
+  * Login modal (new component)
+* Continued use of:
+
+  * LocalStorage (orders)
+  * Helper functions (formatBRL, calcTotals)
+  * Guard checks for DOM safety
+
+---
+
+## 6. Skills Practiced Today
+
+* DOM manipulation
+* Modal UI logic
+* Event handling
+* Debugging JavaScript runtime errors
+* HTML document structure correctness
+* UI consistency & design systems
+* Component reuse (Checkout → Login modal pattern)
+
+---
+
+## 7. Current Project Status
+
+* Functional cart system ✅
+* Checkout modal working ✅
+* Login modal working (demo) ✅
+* Responsive layout maintained ✅
+* Clean visual theme consistency ✅
+
+---
+
+## Next Suggested Steps (Logical Progression)
+
+1. Sign Up modal (matching Login)
+2. Fake user session (localStorage login state)
+3. Navbar user indicator (e.g., "Welcome, Jeff")
+4. Remove items from cart
+5. Quantity system in cart
+6. Real backend integration (future)
+
+
+
+2/19/2026 2:43
+
+
+
+------------------------------------------------------
+
+
+
+Mister Dog – Development Log
+
+Today’s additions:
+
+* Implemented Profile page with user session display (localStorage).
+* Added redirect to Profile when logged in.
+* Created Address system with dynamic list rendering below the button.
+* Replaced prompt-based input with an inline address form UI.
+* Enabled multiple addresses per user (stored per email key).
+* Added remove address functionality and button state toggle (Add/Change Address).
+* Fixed duplicated HTML sections and broken DOM IDs causing button failure.
+
+Day: 20/02/2026 – 02:22
