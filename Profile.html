@@ -1,207 +1,315 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profile • Mister Dog</title>
+  <title>Perfil • Mister Dog</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="brand">
-        <img class="brand-logo" src="logo.png" alt="Mister Dog mascot">
-        <div class="brand-text">
-          <p class="badge">FAN-MADE • PROFILE</p>
-          <h1>YOUR PROFILE 👤</h1>
-          <p class="sub" id="profileSub">Loading user…</p>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand">
+      <img class="brand-logo" src="logo.png" alt="Mascote do Mister Dog">
+      <div class="brand-text">
+        <p class="badge">FAN-MADE • PERFIL</p>
+        <h1>SEU PERFIL 👤</h1>
+        <p class="sub" id="profileSub">Carregando usuário…</p>
 
-          <div class="hero-actions">
-            <a class="btn ghost" href="./index.html">← Back to Menu</a>
-            <button class="btn" id="logoutBtn" type="button">Logout</button>
-          </div>
+        <div class="hero-actions">
+          <a class="btn ghost" href="./index.html">← Voltar ao menu</a>
+          <button class="btn" id="logoutBtn" type="button">Sair</button>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="layout" style="grid-template-columns:1fr;">
+<!-- PEDIDOS -->
+<section class="panel" style="max-width:900px; margin:24px auto;">
+  <div class="panel-head">
+    <h2>Seus Pedidos 🧾</h2>
+    <p class="muted">Salvos localmente (demo). Mais recentes primeiro.</p>
+  </div>
 
-    <!-- ORDERS -->
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Orders</h2>
-        <p>Your future masterpiece of food history.</p>
+  <div id="ordersList" class="orders-scroll"></div>
+
+  <div style="margin-top:14px;">
+    <button class="btn ghost" id="clearOrdersBtn" type="button">
+      Limpar meus pedidos
+    </button>
+  </div>
+</section>
+
+<main class="layout" style="grid-template-columns:1fr;">
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>Endereços</h2>
+    <p>Entrega disponível apenas em Itapetininga (demo).</p>
+  </div>
+
+  <div id="addressesBox"></div>
+
+  <div class="builder" id="addressFormWrap" style="display:none;">
+    <div class="panel-head" style="margin-bottom:10px;">
+      <h2 style="font-size:16px;">Novo endereço</h2>
+      <p>Salve onde você quer receber a entrega.</p>
+    </div>
+
+    <form id="addressForm" class="form">
+
+      <label class="field">
+        <span>Rua</span>
+        <input id="addrStreet" type="text" required />
+      </label>
+
+      <label class="field">
+        <span>Número</span>
+        <input id="addrNumber" type="text" required />
+      </label>
+
+      <label class="field">
+        <span>Complemento (opcional)</span>
+        <input id="addrComplement" type="text" />
+      </label>
+
+      <label class="field">
+        <span>Bairro</span>
+        <input id="addrNeighborhood" type="text" required />
+      </label>
+
+      <label class="field">
+        <span>CEP</span>
+        <input id="addrZip" type="text" required />
+      </label>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn" type="submit">Salvar endereço</button>
+        <button class="btn ghost" id="cancelAddress" type="button">Cancelar</button>
       </div>
 
-      <div id="ordersBox" class="cart-items">
-        <p class="muted">No orders yet. Go buy imaginary hot dogs first 🌭</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>MISTER DOG 🌭</h3>
+      <p>Hot dogs feitos com carinho (e código).</p>
+    </div>
+  </div>
+  <p class="footer-copy">
+    © 2026 Mister Dog • Projeto fan-made 🍟
+  </p>
+</footer>
+
+<script>
+/* ============================
+   AUTH GUARD
+============================ */
+const userRaw = localStorage.getItem("user");
+if (!userRaw) window.location.assign("./index.html");
+
+const user = JSON.parse(userRaw);
+const emailKey = (user.email || "").toLowerCase();
+
+document.getElementById("profileSub").textContent =
+  `Conectado como ${user.name} (${user.email}) • Método: ${user.provider}`;
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("user");
+  window.location.assign("./index.html");
+});
+
+/* ============================
+   HELPERS
+============================ */
+function formatBRL(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ============================
+   PEDIDOS
+============================ */
+const ordersKey = `orders_${emailKey}`;
+const ordersList = document.getElementById("ordersList");
+
+function renderOrders(){
+  const orders = JSON.parse(localStorage.getItem(ordersKey)||"[]");
+
+  if(!orders.length){
+    ordersList.innerHTML =
+      `<p class="muted">Nenhum pedido ainda 🌭</p>`;
+    return;
+  }
+
+  ordersList.innerHTML="";
+
+  orders.forEach(o=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.style.marginBottom="12px";
+
+    const items=(o.items||[])
+      .map(i=>`${i.name} x${i.quantity}`)
+      .join(", ");
+
+    card.innerHTML=`
+      <div class="card-top">
+        <h3>${escapeHtml(o.orderId)}</h3>
+        <span class="tag">${new Date(o.createdAt).toLocaleString()}</span>
       </div>
-    </section>
+      <p><strong>Itens:</strong> ${escapeHtml(items)}</p>
+      <p><strong>Total:</strong> ${formatBRL(o.totals?.total)}</p>
+    `;
 
-    <!-- ADDRESSES -->
-    <section class="panel">
-      <div class="panel-head">
-        <h2>Addresses</h2>
-        <p>Where the (demo) delivery would go.</p>
-      </div>
+    ordersList.appendChild(card);
+  });
+}
 
-      <div id="addressesBox" class="cart-items"></div>
+document.getElementById("clearOrdersBtn")
+.addEventListener("click",()=>{
+  localStorage.removeItem(ordersKey);
+  renderOrders();
+});
 
-      <button class="btn full" id="addressBtn" type="button">Add Address</button>
+renderOrders();
 
-      <!-- Form appears BELOW the button -->
-      <div class="builder" id="addressFormWrap" style="display:none;">
-        <div class="panel-head" style="margin-bottom:10px;">
-          <h2 style="font-size:16px;">Address</h2>
-          <p>Save where you want delivery.</p>
-        </div>
+/* ============================
+   ENDEREÇOS
+============================ */
+const addressKey=`addresses_${emailKey}`;
+const MAX_ADDRESSES=3;
 
-        <form id="addressForm" class="form">
-          <label class="field">
-            <span>Street</span>
-            <input id="addrStreet" type="text" placeholder="Rua Exemplo, 123" required />
-          </label>
+let addresses=JSON.parse(localStorage.getItem(addressKey)||"[]");
+let editingIndex=null;
 
-          <label class="field">
-            <span>City</span>
-            <input id="addrCity" type="text" placeholder="Sorocaba" required />
-          </label>
+const addressesBox=document.getElementById("addressesBox");
+const formWrap=document.getElementById("addressFormWrap");
+const form=document.getElementById("addressForm");
+const cancelBtn=document.getElementById("cancelAddress");
 
-          <label class="field">
-            <span>ZIP</span>
-            <input id="addrZip" type="text" placeholder="18000-000" required />
-          </label>
+const street=document.getElementById("addrStreet");
+const number=document.getElementById("addrNumber");
+const complement=document.getElementById("addrComplement");
+const neighborhood=document.getElementById("addrNeighborhood");
+const zip=document.getElementById("addrZip");
 
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" type="submit">Save Address</button>
-            <button class="btn ghost" id="cancelAddress" type="button">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </section>
+function openForm(){ formWrap.style.display="block"; }
+function closeForm(){ formWrap.style.display="none"; form.reset(); }
 
-  </main>
-
-  <footer class="footer">
-    <p>Fan-made demo • No payments • No affiliation</p>
-  </footer>
-
-  <script>
-    // ----- AUTH GUARD -----
-    const userRaw = localStorage.getItem("user");
-    if (!userRaw) window.location.assign("./index.html");
-    const user = JSON.parse(userRaw);
-
-    // Show user
-    document.getElementById("profileSub").textContent =
-      `Logged in as ${user.name} (${user.email}) • Provider: ${user.provider}`;
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("user");
-      window.location.assign("./index.html");
-    });
-
-    // ===== ADDRESS SYSTEM (LIST) =====
-    const addressBtn = document.getElementById("addressBtn");
-    const addressesBox = document.getElementById("addressesBox");
-
-    const addressFormWrap = document.getElementById("addressFormWrap");
-    const addressForm = document.getElementById("addressForm");
-    const cancelAddress = document.getElementById("cancelAddress");
-
-    const addrStreet = document.getElementById("addrStreet");
-    const addrCity = document.getElementById("addrCity");
-    const addrZip = document.getElementById("addrZip");
-
-    const addressKey = `addresses_${user.email}`;
-    let addresses = JSON.parse(localStorage.getItem(addressKey) || "[]");
-
-    function renderAddresses() {
-      if (addresses.length === 0) {
-        addressesBox.innerHTML = `<p class="muted">No addresses yet. Add one below 👇</p>`;
-        addressBtn.textContent = "Add Address";
-        return;
-      }
-
-      addressBtn.textContent = "Change Addresses";
-
-      addressesBox.innerHTML = addresses.map((a, idx) => `
-        <div class="card">
-          <div class="card-top">
-            <h3>${escapeHtml(a.street)}</h3>
-            <span class="tag">#${idx + 1}</span>
-          </div>
-          <p>${escapeHtml(a.city)} • ${escapeHtml(a.zip)}</p>
-          <div class="price">
-            <span class="muted">Saved</span>
-            <button class="pill" type="button" data-remove-address="${idx}">Remove</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function openAddressForm() {
-      addressFormWrap.style.display = "block";
-      addrStreet.focus();
-    }
-
-    function closeAddressForm() {
-      addressFormWrap.style.display = "none";
-      addressForm.reset();
-    }
-
-    // Toggle form
-    addressBtn.addEventListener("click", () => {
-      const isHidden = addressFormWrap.style.display === "none";
-      if (isHidden) openAddressForm();
-      else closeAddressForm();
-    });
-
-    cancelAddress.addEventListener("click", closeAddressForm);
-
-    // Save address
-    addressForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      addresses.push({
-        street: addrStreet.value.trim(),
-        city: addrCity.value.trim(),
-        zip: addrZip.value.trim()
+function renderAddresses(){
+  if(!addresses.length){
+    addressesBox.innerHTML=`
+      <p class="muted">Nenhum endereço salvo.</p>
+      <button class="btn full" id="btnAddFirst">Novo endereço</button>
+    `;
+    document.getElementById("btnAddFirst")
+      .addEventListener("click",()=>{
+        editingIndex=null;
+        openForm();
       });
+    return;
+  }
 
-      localStorage.setItem(addressKey, JSON.stringify(addresses));
-      renderAddresses();
-      closeAddressForm();
-    });
+  addressesBox.innerHTML=addresses.map((a,i)=>`
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-top">
+        <h3>${escapeHtml(a.street)}</h3>
+        <span class="tag">#${i+1}</span>
+      </div>
+      <p>
+        ${escapeHtml(a.number)}<br>
+        ${escapeHtml(a.neighborhood)}<br>
+        ${escapeHtml(a.zip)}
+      </p>
+      <div class="price" style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="pill" data-edit="${i}">Editar</button>
+        <button class="pill" data-remove="${i}">Remover</button>
+      </div>
+    </div>
+  `).join("");
 
-    // Remove address (delegation)
-    document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-remove-address]");
-      if (!btn) return;
+  if(addresses.length<MAX_ADDRESSES){
+    addressesBox.insertAdjacentHTML("beforeend",
+      `<button class="btn full" id="btnAddNew">Novo endereço</button>`
+    );
+    document.getElementById("btnAddNew")
+      .addEventListener("click",()=>{
+        editingIndex=null;
+        openForm();
+      });
+  }
+}
 
-      const idx = Number(btn.dataset.removeAddress);
-      if (Number.isNaN(idx)) return;
+form.addEventListener("submit",e=>{
+  e.preventDefault();
 
-      addresses.splice(idx, 1);
-      localStorage.setItem(addressKey, JSON.stringify(addresses));
-      renderAddresses();
-    });
+  const newAddr={
+    street:street.value.trim(),
+    number:number.value.trim(),
+    complement:complement.value.trim(),
+    neighborhood:neighborhood.value.trim(),
+    zip:zip.value.trim()
+  };
 
-    // Tiny safety: avoid injecting raw HTML from inputs
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+  if(editingIndex!==null){
+    addresses[editingIndex]=newAddr;
+  }else{
+    if(addresses.length>=MAX_ADDRESSES){
+      alert(`Você pode salvar até ${MAX_ADDRESSES} endereços.`);
+      return;
     }
+    addresses.push(newAddr);
+  }
 
+  localStorage.setItem(addressKey,JSON.stringify(addresses));
+  editingIndex=null;
+  closeForm();
+  renderAddresses();
+});
+
+cancelBtn.addEventListener("click",closeForm);
+
+document.addEventListener("click",e=>{
+  const remove=e.target.closest("[data-remove]");
+  if(remove){
+    const i=Number(remove.dataset.remove);
+    addresses.splice(i,1);
+    localStorage.setItem(addressKey,JSON.stringify(addresses));
     renderAddresses();
-  </script>
+  }
+
+  const edit=e.target.closest("[data-edit]");
+  if(edit){
+    const i=Number(edit.dataset.edit);
+    editingIndex=i;
+    const a=addresses[i];
+    street.value=a.street;
+    number.value=a.number;
+    complement.value=a.complement;
+    neighborhood.value=a.neighborhood;
+    zip.value=a.zip;
+    openForm();
+  }
+});
+
+renderAddresses();
+</script>
 
 </body>
 </html>

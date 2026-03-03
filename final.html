@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pedido concluído • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="layout" style="padding:24px;">
+    <section class="panel" style="max-width:900px; margin:0 auto;">
+      <div class="panel-head">
+        <h2>Pedido concluído ✅</h2>
+        <p id="meta" class="muted">Carregando…</p>
+      </div>
+
+      <!-- CLIENTE + ENDEREÇO + PAGAMENTO -->
+      <div class="cart-items" style="padding:14px;" id="detailsBox"></div>
+
+      <!-- ITENS -->
+      <div class="cart-items" id="itemsBox"></div>
+
+      <!-- TOTAIS -->
+      <div class="cart-footer">
+        <div class="row">
+          <span>Subtotal</span>
+          <strong id="subtotal">R$ 0,00</strong>
+        </div>
+        <div class="row small">
+          <span>Taxa de entrega</span>
+          <span id="fee">R$ 0,00</span>
+        </div>
+        <div class="row total">
+          <span>Total</span>
+          <strong id="total">R$ 0,00</strong>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn" href="./index.html">Voltar ao menu</a>
+          <button class="btn ghost" id="clear" type="button">Limpar pedido salvo</button>
+        </div>
+      </div>
+
+      <p class="muted disclaimer" style="margin-top:16px;">
+        Demo apenas. Sem pagamentos reais. Sem afiliação.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    function formatBRL(value) {
+      return Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    const raw = localStorage.getItem("lastOrder");
+
+    const meta = document.getElementById("meta");
+    const detailsBox = document.getElementById("detailsBox");
+    const itemsBox = document.getElementById("itemsBox");
+
+    const subtotalEl = document.getElementById("subtotal");
+    const feeEl = document.getElementById("fee");
+    const totalEl = document.getElementById("total");
+
+    const clearBtn = document.getElementById("clear");
+
+    if (!raw) {
+      meta.textContent = "Nenhum pedido encontrado. Volte e finalize um pedido primeiro.";
+      detailsBox.innerHTML = `<p class="muted">Nada para mostrar.</p>`;
+      itemsBox.innerHTML = "";
+    } else {
+      const order = JSON.parse(raw);
+
+      meta.textContent =
+        `Pedido ${escapeHtml(order.orderId || "—")} • ${new Date(order.createdAt).toLocaleString("pt-BR")}`;
+
+      // Details
+      const c = order.customer || {};
+      const a = order.address || {};
+      const p = order.payment || {};
+
+      let payText = "Não definido";
+      if (p.method === "pix") payText = "PIX";
+      if (p.method === "credit") payText = `Cartão (**** ${escapeHtml(p.cardLast4 || "????")})`;
+      if (p.method === "cash") {
+        payText = "Dinheiro";
+        if (p.changeFor) payText += ` (troco para ${formatBRL(p.changeFor)})`;
+      }
+
+      const addressLine = [
+        `${a.street || ""}${a.number ? ", " + a.number : ""}`,
+        a.complement ? `• ${a.complement}` : ""
+      ].filter(Boolean).join(" ");
+
+      detailsBox.innerHTML = `
+        <div class="row" style="margin:0;">
+          <span><strong>Cliente</strong></span>
+          <span style="font-weight:800;">${escapeHtml(c.name || "Sem nome")} • ${escapeHtml(c.phone || "Sem telefone")}</span>
+        </div>
+
+        ${c.notes ? `<p class="muted" style="margin:10px 0 0 0;"><strong>Obs:</strong> ${escapeHtml(c.notes)}</p>` : ""}
+
+        <hr style="border:none; border-top:1px solid rgba(0,0,0,0.15); margin:14px 0;" />
+
+        <div class="row" style="margin:0;">
+          <span><strong>Endereço</strong></span>
+          <span style="font-weight:800; text-align:right;">
+            ${escapeHtml(addressLine || "Não definido")}<br/>
+            ${escapeHtml(a.neighborhood || "")}${a.city ? " • " + escapeHtml(a.city) : ""}${a.state ? " • " + escapeHtml(a.state) : ""}<br/>
+            ${escapeHtml(a.zip || "")}
+          </span>
+        </div>
+
+        <hr style="border:none; border-top:1px solid rgba(0,0,0,0.15); margin:14px 0;" />
+
+        <div class="row" style="margin:0;">
+          <span><strong>Pagamento</strong></span>
+          <span style="font-weight:800;">${escapeHtml(payText)}</span>
+        </div>
+      `;
+
+      // Items
+      itemsBox.innerHTML = "";
+      (order.items || []).forEach(item => {
+        const row = document.createElement("div");
+        row.className = "cart-row";
+
+        const extras = Array.isArray(item.extras) ? item.extras : [];
+        const extrasHtml = extras.length
+          ? `<div class="cart-extras" style="margin-top:6px;">
+              ${extras.map(e => `<small>+ ${escapeHtml(e.name)}</small>`).join("")}
+            </div>`
+          : "";
+
+        row.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <span>${escapeHtml(item.name)} x${Number(item.quantity || 0)}</span>
+            ${extrasHtml}
+          </div>
+          <span>${formatBRL((item.price || 0) * (item.quantity || 0))}</span>
+        `;
+
+        itemsBox.appendChild(row);
+      });
+
+      // Totals
+      subtotalEl.textContent = formatBRL(order.totals?.subtotal);
+      feeEl.textContent = formatBRL(order.totals?.fee);
+      totalEl.textContent = formatBRL(order.totals?.total);
+    }
+
+    clearBtn?.addEventListener("click", () => {
+      localStorage.removeItem("lastOrder");
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>

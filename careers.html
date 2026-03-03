@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trabalhe conosco • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="Mascote Mister Dog">
+        <div class="brand-text">
+          <p class="badge">FAN-MADE • CARREIRAS</p>
+          <h1>TRABALHE CONOSCO 💼</h1>
+          <p class="sub">A gente contrata humanos. Às vezes até os competentes.</p>
+
+          <div class="hero-actions">
+            <a class="btn ghost" href="./index.html">← Voltar ao menu</a>
+            <a class="btn" id="applyCta" href="#applyPanel">Candidatar agora</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="careers-wrap">
+
+    <!-- 🚫 NOT HIRING PANEL -->
+    <section class="panel" id="notHiringPanel">
+      <div class="panel-head">
+        <h2 style="font-size:28px;">🚫 No momento, não estamos contratando</h2>
+        <p class="muted" style="font-size:16px; max-width:70ch; line-height:1.5;">
+          Quando abrirmos vagas novamente, esta página exibirá as oportunidades e o formulário de candidatura.
+          Por enquanto, seguimos apenas no modo demo.
+        </p>
+
+        <div style="margin-top:16px;">
+          <a class="btn ghost" href="./index.html">← Voltar ao menu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY PANEL -->
+    <section class="panel" id="whyPanel">
+      <div class="panel-head">
+        <h2>Por que o Mister Dog?</h2>
+        <p class="muted">Hot dogs, sistemas simples e quase zero drama corporativo (quase).</p>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <h3>O que você vai fazer</h3>
+        <ul>
+          <li>Ajudar clientes sem iniciar uma guerra civil.</li>
+          <li>Manter qualidade consistente.</li>
+          <li>Chegar no horário. Sim, isso ainda importa.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>O que você ganha</h3>
+        <ul>
+          <li>Equipe legal (na maioria dos dias).</li>
+          <li>Turnos flexíveis.</li>
+          <li>Lanche às vezes. Não se apega.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ROLES PANEL -->
+    <section class="panel" id="rolesPanel">
+      <div class="panel-head">
+        <h2>Vagas abertas 📌</h2>
+      </div>
+
+      <div class="card">
+        <h3>Atendente / Caixa</h3>
+        <p>Comunicação, matemática básica, calma sob pressão.</p>
+      </div>
+
+      <div class="card">
+        <h3>Cozinha / Montagem</h3>
+        <p>Agilidade, higiene, trabalho em equipe.</p>
+      </div>
+
+      <div class="card">
+        <h3>Entregador (Bike/Moto)</h3>
+        <p>Responsabilidade, noção de rota, boas vibes.</p>
+      </div>
+    </section>
+
+    <!-- APPLY PANEL -->
+    <section class="panel" id="applyPanel">
+      <div class="panel-head">
+        <h2>Candidatar ✍️</h2>
+      </div>
+
+      <form class="form" id="applyForm">
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" required>
+        </label>
+
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" required>
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" required>
+        </label>
+
+        <div style="margin-top:12px;">
+          <button class="btn" type="submit">Enviar candidatura</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>MISTER DOG 🌭</h3>
+        <p>Hot dogs feitos com carinho (e código).</p>
+      </div>
+    </div>
+
+    <p class="footer-copy">
+      © 2026 Mister Dog • Fan-made project 🍟
+    </p>
+  </footer>
+
+  <script>
+    // ===== HIRING TOGGLE =====
+    const IS_HIRING = false;
+
+    const notHiringPanel = document.getElementById("notHiringPanel");
+    const whyPanel = document.getElementById("whyPanel");
+    const rolesPanel = document.getElementById("rolesPanel");
+    const applyPanel = document.getElementById("applyPanel");
+    const applyCta = document.getElementById("applyCta");
+
+    if (IS_HIRING) {
+      notHiringPanel.style.display = "none";
+    } else {
+      whyPanel.style.display = "none";
+      rolesPanel.style.display = "none";
+      applyPanel.style.display = "none";
+      applyCta.style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
