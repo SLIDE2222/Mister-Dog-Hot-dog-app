@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Criar conta • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="Mascote do Mister Dog">
+        <div class="brand-text">
+          <p class="badge">FAN-MADE • DEMO</p>
+          <h1>CRIAR CONTA 🧾</h1>
+          <p class="sub">Apenas demonstração. Nenhuma conta real será criada.</p>
+
+          <div class="hero-actions">
+            <a class="btn ghost" href="index.html">← Voltar ao menu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout" style="grid-template-columns:1fr;">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Criar conta</h2>
+        <p>Só interface por enquanto.</p>
+      </div>
+
+      <form id="signupForm" class="form">
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" id="suName" placeholder="Jeff" required />
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="suEmail" placeholder="jeff@email.com" required />
+        </label>
+
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" id="suPassword" placeholder="••••••••" required />
+        </label>
+
+        <label class="field">
+          <span>Confirmar senha</span>
+          <input type="password" id="suPassword2" placeholder="••••••••" required />
+        </label>
+
+        <button type="button" class="google-btn" id="googleSignup">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+          Criar com Google
+        </button>
+
+        <div class="divider">ou</div>
+
+        <button class="btn full" type="submit">Criar conta (demo)</button>
+      </form>
+
+      <p class="muted disclaimer">Demo apenas. Sem autenticação real.</p>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <h3>MISTER DOG 🌭</h3>
+        <p>Hot dogs feitos com carinho (e código).</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Empresa 💼</h4>
+        <a href="./careers.html">Trabalhe conosco</a>
+        <a href="./about.html">Sobre</a>
+      </div>
+
+      <div class="footer-social">
+        <h4>Contato & Redes 📲</h4>
+
+        <a href="https://wa.me/5511999999999" target="_blank" class="social-link whatsapp" rel="noreferrer">
+          WhatsApp
+        </a>
+
+        <a href="https://instagram.com/yourprofile" target="_blank" class="social-link instagram" rel="noreferrer">
+          Instagram
+        </a>
+
+        <a href="https://facebook.com/yourpage" target="_blank" class="social-link facebook" rel="noreferrer">
+          Facebook
+        </a>
+      </div>
+
+    </div>
+
+    <p class="footer-copy">
+      © 2026 Mister Dog • Projeto fan-made 🍟
+    </p>
+  </footer>
+
+  <script>
+    // ===== GOOGLE SIGNUP (DEMO) =====
+    const googleSignup = document.getElementById("googleSignup");
+
+    if (googleSignup) {
+      googleSignup.addEventListener("click", () => {
+        const fakeUser = {
+          name: "Google User",
+          email: "user@gmail.com",
+          provider: "google"
+        };
+
+        localStorage.setItem("user", JSON.stringify(fakeUser));
+        alert("Conta criada com Google (demo) 🚀");
+        window.location.href = "index.html";
+      });
+    }
+
+    // ===== SIGNUP FORM (DEMO) =====
+    const signupForm = document.getElementById("signupForm");
+
+    if (signupForm) {
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("suName").value.trim();
+        const email = document.getElementById("suEmail").value.trim();
+        const pass1 = document.getElementById("suPassword").value;
+        const pass2 = document.getElementById("suPassword2").value;
+
+        if (pass1 !== pass2) {
+          alert("As senhas não coincidem 😐");
+          return;
+        }
+
+        const fakeUser = {
+          name,
+          email,
+          provider: "email"
+        };
+
+        localStorage.setItem("user", JSON.stringify(fakeUser));
+        alert("Conta criada com sucesso (demo) 🎉");
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+
+</body>
+</html>

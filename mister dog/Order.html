@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finalizar • Mister Dog</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="layout" style="padding:24px;">
+    <section class="panel" style="max-width:900px; margin:0 auto;">
+      <div class="panel-head">
+        <h2>Finalizar pedido 🍟</h2>
+        <p id="orderMeta" class="muted">Carregando…</p>
+      </div>
+
+      <!-- RESUMO -->
+      <div class="cart-items" id="summaryBox"></div>
+
+      <div class="cart-footer">
+        <div class="row">
+          <span>Subtotal</span>
+          <strong id="sumSubtotal">R$ 0,00</strong>
+        </div>
+        <div class="row small">
+          <span>Taxa de entrega</span>
+          <span id="sumFee">R$ 0,00</span>
+        </div>
+        <div class="row total">
+          <span>Total</span>
+          <strong id="sumTotal">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div style="margin-top:24px; border-top:2px dashed rgba(0,0,0,0.2); padding-top:18px;">
+        <h3 style="margin:0 0 10px 0;">Entrega + Pagamento</h3>
+        <p class="muted" style="margin-top:0;">Pré-preenchido com o que você já informou. Porque somos civilizados. 🙂</p>
+
+        <form id="finishForm" class="form">
+
+          <!-- Cliente -->
+          <div class="field">
+            <span>Nome</span>
+            <input id="fName" type="text" placeholder="Jeff" required />
+          </div>
+
+          <div class="field">
+            <span>Telefone</span>
+            <input id="fPhone" type="tel" placeholder="(15) 99999-9999" required />
+          </div>
+
+          <div class="field">
+            <span>Observações (opcional)</span>
+            <input id="fNotes" type="text" placeholder="Sem cebola, chamar no portão…" />
+          </div>
+
+          <!-- Endereço -->
+          <h4 style="margin:18px 0 8px 0;">Endereço</h4>
+
+          <!-- Dropdown endereços salvos -->
+          <div class="field address-picker" id="addressPicker">
+            <span>Endereços salvos</span>
+            <div id="selectedAddressDisplay" class="address-display">
+              Selecione um endereço ▼
+            </div>
+            <div id="addressDropdown" class="address-dropdown"></div>
+          </div>
+
+          <div class="field">
+            <span>Rua</span>
+            <input id="addrStreet" type="text" placeholder="Rua Exemplo" required />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="field">
+              <span>Número</span>
+              <input id="addrNumber" type="text" placeholder="123" required />
+            </div>
+            <div class="field">
+              <span>Complemento (opcional)</span>
+              <input id="addrComp" type="text" placeholder="Apto 12B" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="field">
+              <span>Bairro</span>
+              <input id="addrNeigh" type="text" placeholder="Centro" required />
+            </div>
+            <div class="field">
+              <span>Cidade</span>
+              <input id="addrCity" type="text" value="Itapetininga" readonly aria-readonly="true" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="field">
+              <span>Estado</span>
+              <input id="addrState" type="text" placeholder="SP" required />
+            </div>
+            <div class="field">
+              <span>CEP</span>
+              <input id="addrZip" type="text" placeholder="18200-000" required />
+            </div>
+          </div>
+
+          <!-- Pagamento -->
+          <h4 style="margin:18px 0 8px 0;">Pagamento</h4>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+            <label style="display:flex; align-items:center; gap:8px; font-weight:700;">
+              <input type="radio" name="payMethod" value="pix" checked />
+              PIX
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-weight:700;">
+              <input type="radio" name="payMethod" value="credit" />
+              Cartão
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-weight:700;">
+              <input type="radio" name="payMethod" value="cash" />
+              Dinheiro
+            </label>
+          </div>
+
+          <!-- PIX -->
+          <div id="pixBox" class="cart-items" style="padding:12px; margin-bottom:12px;">
+            <div class="row" style="margin:0;">
+              <span><strong>Chave PIX</strong></span>
+              <span id="pixKey" style="font-weight:800;">misterdog@pix.com</span>
+            </div>
+            <p class="muted" style="margin:8px 0 0 0;">Copie a chave, pague e confirme.</p>
+            <button class="btn ghost" id="copyPix" type="button" style="margin-top:10px;">Copiar chave PIX</button>
+          </div>
+
+          <!-- Cartão -->
+          <div id="creditBox" class="cart-items" style="padding:12px; margin-bottom:12px; display:none;">
+            <div class="field">
+              <span>Número do cartão</span>
+              <input id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456" />
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="field">
+                <span>Validade</span>
+                <input id="cardExpiry" placeholder="MM/AA" />
+              </div>
+              <div class="field">
+                <span>CVV</span>
+                <input id="cardCvv" inputmode="numeric" placeholder="123" />
+              </div>
+            </div>
+
+            <div class="field">
+              <span>Nome no cartão</span>
+              <input id="cardName" placeholder="JEFF WALKER" />
+            </div>
+          </div>
+
+          <!-- Dinheiro -->
+          <div id="cashBox" class="cart-items" style="padding:12px; margin-bottom:12px; display:none;">
+            <p class="muted" style="margin:0 0 10px 0;">Pagamento em dinheiro na entrega (demo).</p>
+            <div class="field" style="margin:0;">
+              <span>Precisa de troco para (opcional)</span>
+              <input id="cashChangeFor" inputmode="decimal" placeholder="Ex: 50,00" />
+              <small class="muted" id="cashChangeHint" style="margin-top:6px; display:block;">
+                Deixe vazio se não precisar de troco.
+              </small>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;">
+            <a class="btn ghost" href="./index.html">← Voltar ao menu</a>
+            <button class="btn" type="submit">Confirmar ✅</button>
+          </div>
+        </form>
+
+        <p class="muted disclaimer" style="margin-top:16px;">
+          Demo apenas. Não processa pagamento de verdade.
+        </p>
+      </div>
+    </section>
+  </main>
+
+<script>
+/* ============================
+   HELPERS
+============================ */
+function formatBRL(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+function normalizeText(s){
+  return String(s||"")
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+}
+function parseBRMoney(raw){
+  const v = String(raw||"").trim();
+  if(!v) return null;
+  const parsed = Number(v.replace(/\./g,"").replace(",","."));
+  return Number.isFinite(parsed) ? parsed : NaN;
+}
+
+/* ============================
+   ENTREGA (taxa por bairro)
+============================ */
+const FREE_DELIVERY_OVER = 45;
+const SHOP = { lat: -23.5910, lng: -48.0530 }; // TODO coords reais
+const neighborhoodCoords = {
+  "centro": { lat: -23.5910, lng: -48.0530 },
+  "vila mazzei": { lat: -23.5850, lng: -48.0450 },
+  "vila aparecida": { lat: -23.6000, lng: -48.0600 },
+  "jardim paulista": { lat: -23.5750, lng: -48.0620 },
+  "vila barcelos": { lat: -23.6100, lng: -48.0400 },
+  "jardim esplanada": { lat: -23.5650, lng: -48.0500 },
+  "morada do sol": { lat: -23.5550, lng: -48.0700 }
+};
+function haversineKm(a,b){
+  const R=6371;
+  const dLat=(b.lat-a.lat)*Math.PI/180;
+  const dLng=(b.lng-a.lng)*Math.PI/180;
+  const lat1=a.lat*Math.PI/180;
+  const lat2=b.lat*Math.PI/180;
+  const x = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function deliveryFeeByNeighborhood(neigh, subtotal){
+  if(subtotal >= FREE_DELIVERY_OVER) return 0;
+  const key = normalizeText(neigh);
+  const point = neighborhoodCoords[key];
+  if(!point) return 8;
+  const km = haversineKm(SHOP, point);
+  if(km <= 2) return 4;
+  if(km <= 5) return 6;
+  if(km <= 8) return 8;
+  return 10;
+}
+
+/* ============================
+   DOM
+============================ */
+const orderMeta = document.getElementById("orderMeta");
+const summaryBox = document.getElementById("summaryBox");
+const sumSubtotal = document.getElementById("sumSubtotal");
+const sumFee = document.getElementById("sumFee");
+const sumTotal = document.getElementById("sumTotal");
+
+const finishForm = document.getElementById("finishForm");
+const fName = document.getElementById("fName");
+const fPhone = document.getElementById("fPhone");
+const fNotes = document.getElementById("fNotes");
+
+const addrStreet = document.getElementById("addrStreet");
+const addrNumber = document.getElementById("addrNumber");
+const addrComp = document.getElementById("addrComp");
+const addrNeigh = document.getElementById("addrNeigh");
+const addrCity = document.getElementById("addrCity");
+const addrState = document.getElementById("addrState");
+const addrZip = document.getElementById("addrZip");
+
+const pixBox = document.getElementById("pixBox");
+const creditBox = document.getElementById("creditBox");
+const cashBox = document.getElementById("cashBox");
+const copyPix = document.getElementById("copyPix");
+const pixKeyEl = document.getElementById("pixKey");
+
+const cardNumber = document.getElementById("cardNumber");
+const cardExpiry = document.getElementById("cardExpiry");
+const cardCvv = document.getElementById("cardCvv");
+const cardName = document.getElementById("cardName");
+const cashChangeFor = document.getElementById("cashChangeFor");
+
+/* ============================
+   ENDEREÇOS SALVOS (dropdown)
+============================ */
+const addressPicker = document.getElementById("addressPicker");
+const addressDropdown = document.getElementById("addressDropdown");
+const selectedAddressDisplay = document.getElementById("selectedAddressDisplay");
+
+function getUserEmailKey(){
+  const uRaw = localStorage.getItem("user");
+  if(!uRaw) return null;
+  const u = JSON.parse(uRaw);
+  return String(u.email||"").trim().toLowerCase();
+}
+
+function formatAddressLine(a){
+  if(!a) return "";
+  const comp = a.complement ? `, ${a.complement}` : "";
+  return `${a.street}, ${a.number}${comp} • ${a.neighborhood}`;
+}
+
+function applyAddressToForm(a){
+  if(!a) return;
+  addrStreet.value = a.street || "";
+  addrNumber.value = a.number || "";
+  addrComp.value = a.complement || "";
+  addrNeigh.value = a.neighborhood || "";
+  addrCity.value = "Itapetininga";
+  addrState.value = a.state || "SP";
+  addrZip.value = a.zip || "";
+  selectedAddressDisplay.textContent = formatAddressLine(a);
+}
+
+function loadSavedAddressesDropdown(){
+  const emailKey = getUserEmailKey();
+  addressDropdown.innerHTML = "";
+
+  if(!emailKey){
+    addressDropdown.innerHTML = `<div class="address-option">Faça login para ver endereços</div>`;
+    return;
+  }
+
+  const key = `addresses_${emailKey}`;
+  const list = JSON.parse(localStorage.getItem(key)||"[]");
+
+  if(!list.length){
+    addressDropdown.innerHTML = `<div class="address-option">Nenhum endereço salvo</div>`;
+    return;
+  }
+
+  list.forEach(a=>{
+    const opt = document.createElement("div");
+    opt.className = "address-option";
+    opt.textContent = formatAddressLine(a);
+    opt.addEventListener("click",()=>{
+      applyAddressToForm(a);
+      addressDropdown.style.display = "none";
+      if(window.__order) recalcAndRenderTotals(window.__order);
+    });
+    addressDropdown.appendChild(opt);
+  });
+}
+
+selectedAddressDisplay?.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  loadSavedAddressesDropdown();
+  addressDropdown.style.display = (addressDropdown.style.display==="block") ? "none" : "block";
+});
+document.addEventListener("click",(e)=>{
+  if(!addressPicker?.contains(e.target)) addressDropdown.style.display = "none";
+});
+
+/* ============================
+   DEFAULT ADDRESS (profile)
+============================ */
+function loadDefaultAddressFromProfile(){
+  const emailKey = getUserEmailKey();
+  if(!emailKey) return;
+  const defaultKey = `defaultAddress_${emailKey}`;
+  const raw = localStorage.getItem(defaultKey);
+  if(!raw) return;
+  try{
+    const addr = JSON.parse(raw);
+    applyAddressToForm(addr);
+  }catch(e){}
+}
+
+/* ============================
+   TOTALS
+============================ */
+function recalcAndRenderTotals(order){
+  const subtotal = Number(order?.totals?.subtotal || 0);
+  const neighborhood = addrNeigh.value.trim();
+  const fee = deliveryFeeByNeighborhood(neighborhood, subtotal);
+  const total = subtotal + fee;
+
+  sumSubtotal.textContent = formatBRL(subtotal);
+  sumFee.textContent = formatBRL(fee);
+  sumTotal.textContent = formatBRL(total);
+
+  order.totals = { subtotal, fee, total };
+}
+
+/* ============================
+   PAYMENT UI
+============================ */
+function togglePayment(method){
+  pixBox.style.display = (method==="pix") ? "block" : "none";
+  creditBox.style.display = (method==="credit") ? "block" : "none";
+  cashBox.style.display = (method==="cash") ? "block" : "none";
+}
+
+document.addEventListener("change",(e)=>{
+  if(e.target && e.target.name==="payMethod"){
+    togglePayment(e.target.value);
+  }
+});
+
+/* ============================
+   LOAD ORDER
+============================ */
+const orderRaw = localStorage.getItem("lastOrder");
+
+if(!orderRaw){
+  orderMeta.textContent = "Nenhum pedido encontrado. Volte e faça um pedido primeiro.";
+  summaryBox.innerHTML = `<p class="muted">Nada para mostrar.</p>`;
+}else{
+  const order = JSON.parse(orderRaw);
+  window.__order = order; // keep in memory for fee calc & dropdown
+
+  // Prefill customer
+  fName.value = order.customer?.name || "";
+  fPhone.value = order.customer?.phone || "";
+  fNotes.value = order.customer?.notes || "";
+
+  // Address: try default from profile first, else use order.address if exists
+  loadDefaultAddressFromProfile();
+  if(!addrStreet.value && order.address){
+    applyAddressToForm(order.address);
+  }
+  if(!addrState.value) addrState.value = "SP";
+
+  // Header
+  orderMeta.textContent =
+    `Pedido ${order.orderId || "—"} • ${new Date(order.createdAt).toLocaleString()}`;
+
+  // Items
+  summaryBox.innerHTML = "";
+  const list = document.createElement("div");
+
+  (order.items||[]).forEach(item=>{
+    const row = document.createElement("div");
+    row.className = "cart-row";
+    row.innerHTML = `
+      <span>${item.name} x${item.quantity}</span>
+      <span>${formatBRL(item.price * item.quantity)}</span>
+    `;
+    list.appendChild(row);
+  });
+
+  summaryBox.appendChild(list);
+
+  // Totals (recalc from bairro)
+  recalcAndRenderTotals(order);
+  addrNeigh.addEventListener("input",()=>recalcAndRenderTotals(order));
+
+  // Payment prefill
+  const savedMethod = order.payment?.method || "pix";
+  const radio = document.querySelector(`input[name="payMethod"][value="${savedMethod}"]`);
+  if(radio) radio.checked = true;
+  togglePayment(savedMethod);
+
+  if(savedMethod==="cash" && cashChangeFor && order.payment?.changeFor){
+    cashChangeFor.value = String(order.payment.changeFor).replace(".",",");
+  }
+}
+
+/* ============================
+   COPY PIX
+============================ */
+copyPix?.addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText(pixKeyEl.textContent.trim());
+    copyPix.textContent = "Copiado ✅";
+    setTimeout(()=>copyPix.textContent="Copiar chave PIX", 1200);
+  }catch(err){
+    alert("Não deu pra copiar. Seu navegador bloqueou.");
+  }
+});
+
+/* ============================
+   SUBMIT FINAL
+============================ */
+finishForm?.addEventListener("submit",(e)=>{
+  e.preventDefault();
+
+  // AUTH CHECK
+  const savedUser = localStorage.getItem("user");
+  if(!savedUser){
+    window.location.href="./signup.html";
+    return;
+  }
+
+  const orderRaw2 = localStorage.getItem("lastOrder");
+  if(!orderRaw2) return;
+  const order = JSON.parse(orderRaw2);
+
+  // update totals one last time
+  recalcAndRenderTotals(order);
+
+  // payment method
+  const method = document.querySelector('input[name="payMethod"]:checked')?.value || "pix";
+
+  if(method==="credit"){
+    if(!cardNumber.value.trim() || !cardExpiry.value.trim() || !cardCvv.value.trim()){
+      alert("Preencha número do cartão, validade e CVV (demo).");
+      return;
+    }
+  }
+
+  // cash change validation
+  let changeFor = null;
+  if(method==="cash"){
+    const parsed = parseBRMoney(cashChangeFor.value);
+    if(parsed !== null){
+      if(Number.isNaN(parsed) || parsed <= 0){
+        alert("Valor de troco inválido. Ex: 50,00");
+        return;
+      }
+      const total = Number(order.totals?.total || 0);
+      if(total > 0 && parsed < total){
+        alert(`O troco deve ser pelo menos o total (${formatBRL(total)}).`);
+        return;
+      }
+      changeFor = parsed;
+    }
+  }
+
+  // Save customer + address
+  order.customer = {
+    name: fName.value.trim(),
+    phone: fPhone.value.trim(),
+    notes: fNotes.value.trim()
+  };
+
+  order.address = {
+    street: addrStreet.value.trim(),
+    number: addrNumber.value.trim(),
+    complement: addrComp.value.trim(),
+    neighborhood: addrNeigh.value.trim(),
+    city: "Itapetininga",
+    state: addrState.value.trim(),
+    zip: addrZip.value.trim()
+  };
+
+  // payment
+  order.payment = {
+    method,
+    cardLast4: method==="credit" ? cardNumber.value.trim().slice(-4) : null,
+    changeFor: method==="cash" ? changeFor : null
+  };
+
+  // attach user
+  const u = JSON.parse(savedUser);
+  order.user = { name: u.name, email: u.email };
+
+  // persist lastOrder
+  localStorage.setItem("lastOrder", JSON.stringify(order));
+
+  // save history
+  const emailKey = String(u.email || "").trim().toLowerCase();
+  const ordersKey = `orders_${emailKey}`;
+  const existing = JSON.parse(localStorage.getItem(ordersKey)||"[]");
+  existing.unshift(order);
+  localStorage.setItem(ordersKey, JSON.stringify(existing));
+
+  // go receipt
+  window.location.href="./final.html";
+});
+</script>
+
+</body>
+</html>
